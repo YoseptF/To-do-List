@@ -25,11 +25,9 @@ const displayMessage = (msg, type) => {
   div.append(h2);
   document.querySelector('.board').prepend(div);
   dismissMessages();
-  // document.querySelector('.board').insertAdjacentElement("afterbegin", div);
 };
 
 const displayTodoForm = (target) => {
-  console.count('enter');
   if (target.classList.contains('add-btn')) {
     const id = target.parentNode.previousElementSibling.innerHTML;
     const addForm = `
@@ -49,7 +47,6 @@ const displayTodoForm = (target) => {
       <input type="submit" value="Create Todo">
     </form>
     `;
-
     document.querySelector('.right').innerHTML = addForm;
     document.querySelector('#todo-form').addEventListener('submit', (e) => addTodo(e, id));
   }
@@ -57,29 +54,21 @@ const displayTodoForm = (target) => {
 
 const toggleTodoStatus = (target) => {
   if (target.classList.contains('todo-status')) {
-    console.log("toggle");
-    console.log("target: " , target);
-    console.log("id", projectId);
     let parent = target.parentNode.parentNode;
-    // var child = document.getElementById('my_element');
     let index = Array.prototype.indexOf.call(parent.children, target.parentNode);
-    console.log("index elemnet: ", index);
     let localS = getLocalStorage();
     localS.forEach(project => {
       if(project.id === projectId) {
         project.todos[index].status = !project.todos[index].status;
       }
     })
-    console.log("target before:" , target.innerText)
     target.innerText = target.innerText === 'Done'  ? 'Undo' : 'Done' 
-    console.log("target after:" , target.innerText)
     updateData(localS);
   }
 }
 
 const displayTodos = (target) => {
   if (target.classList.contains('check-btn')) {
-    console.log("display todos")
     const id = target.parentNode.previousElementSibling.innerHTML;
     projectId = id;
     let localS = getLocalStorage();
@@ -89,9 +78,7 @@ const displayTodos = (target) => {
         todos = project.todos;
       }
     })
-    console.log("Todos: ", todos);
     let html = map(todos);
-    // console.log(html);
     document.querySelector('.right').innerHTML = html;
   }
 }

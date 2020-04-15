@@ -1,7 +1,7 @@
 import {
   DOMappend, DOMcreate, DOMListener, displayMessage, displayProjects, displayTodoForm, displayTodos, toggleTodoStatus
 } from './domManipulation';
-import { checkData, updateData, getLocalStorage } from './localStorage';
+import { updateData, getLocalStorage } from './localStorage';
 import { project, buttons } from './project';
 import todo  from './todo';
 
@@ -15,7 +15,6 @@ const createProject = (e) => {
     return false;
   }
   const newProject = project(name);
-  console.log(newProject);
   newProject.create();
   const obj = createObj(newProject);
   projects.push(obj);
@@ -24,7 +23,6 @@ const createProject = (e) => {
 
 const addTodo = (e, id) => {
   e.preventDefault();
-  console.log("Add todo");
   let title = document.querySelector('#title').value
   let description = document.querySelector('#description').value
   let dueDate = document.querySelector('#dueDate').value
@@ -34,21 +32,15 @@ const addTodo = (e, id) => {
     return false;
   }
   let newTodo = todo(priority, title, description, dueDate);
-  console.log("New todo: ", newTodo);
   let obj = createTodoObj(newTodo);
   let localS = getLocalStorage();
-  console.log("LOCALSTARAGE: ", localS);
   localS.forEach(project => {
-    console.log("PROJECT: ", project);
-    console.log("ID: ", id);
     if (project.id === id) {
-      console.log("yess")
       project.todos.push(obj)
     }
   })
   updateData(localS);
   document.querySelector('#todo-form').remove();
-
 }
 
 const createProjectForm = () => {
@@ -73,15 +65,12 @@ const createBoard = () => {
   DOMappend('.content', background);
 
   if (getLocalStorage().length === 0) {
-    console.log('empty');
     const initialProject = project('Project test');
-    console.log(initialProject);
     initialProject.create();
     const obj = createObj(initialProject);
     projects.push(obj);
     updateData(projects);
   } else {
-    console.log('not empty');
     const local = getLocalStorage();
     projects = local;
     displayProjects(projects);
