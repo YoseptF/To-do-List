@@ -4,4 +4,3 @@ import './sass/style.scss';
 createBoard();
 createProjectForm();
 
-

@@ -1,3 +1,8 @@
+import { addTodo } from './board';
+import { getLocalStorage, updateData } from './localStorage';
+
+let projectId;
+
 const DOMappend = (selector, item) => {
   document.querySelector(selector).append(item);
 };
@@ -26,15 +31,15 @@ const displayMessage = (msg, type) => {
 const displayTodoForm = (target) => {
   console.count('enter');
   if (target.classList.contains('add-btn')) {
-    const id = target.parentNode.previousElementSibling;
+    const id = target.parentNode.previousElementSibling.innerHTML;
     const addForm = `
-    <form>
+    <form id="todo-form">
       <label for ="title">Title</label>
       <input type="text" id ="title">
       <label for ="description">Description</label>
       <textarea id="description"></textarea>
       <label for ="dueDate">Due Date</label>
-      <input type ="date">
+      <input type ="date" id="dueDate">
       <label for ="priority">Priority</label>
       <select name="Select" id="priority">
         <option value="low">Low</option>
@@ -46,8 +51,63 @@ const displayTodoForm = (target) => {
     `;
 
     document.querySelector('.right').innerHTML = addForm;
+    document.querySelector('#todo-form').addEventListener('submit', (e) => addTodo(e, id));
   }
 };
+
+const toggleTodoStatus = (target) => {
+  if (target.classList.contains('todo-status')) {
+    console.log("toggle");
+    console.log("target: " , target);
+    console.log("id", projectId);
+    let parent = target.parentNode.parentNode;
+    // var child = document.getElementById('my_element');
+    let index = Array.prototype.indexOf.call(parent.children, target.parentNode);
+    console.log("index elemnet: ", index);
+    let localS = getLocalStorage();
+    localS.forEach(project => {
+      if(project.id === projectId) {
+        project.todos[index].status = !project.todos[index].status;
+      }
+    })
+    console.log("target before:" , target.innerText)
+    target.innerText = target.innerText === 'Done'  ? 'Undo' : 'Done' 
+    console.log("target after:" , target.innerText)
+    updateData(localS);
+  }
+}
+
+const displayTodos = (target) => {
+  if (target.classList.contains('check-btn')) {
+    console.log("display todos")
+    const id = target.parentNode.previousElementSibling.innerHTML;
+    projectId = id;
+    let localS = getLocalStorage();
+    let todos;
+    localS.forEach(project => {
+      if(project.id === id) {
+        todos = project.todos;
+      }
+    })
+    console.log("Todos: ", todos);
+    let html = map(todos);
+    // console.log(html);
+    document.querySelector('.right').innerHTML = html;
+  }
+}
+
+const map = (todos) => {
+  return todos.map(todo => `
+    <div class="todo-details">
+      <h3>${todo.title}</h3>
+      <p>${todo.description}</p>
+      <small>${todo.priority}</small>
+      <strong>${todo.dueDate}</strong>
+      <button class="todo-status">${todo.status ? 'Done' : 'Undo'}</button>
+    </div>
+  
+  `).join('');
+}
 
 const displayProjects = (projects) => {
   const html = projects.map((project) => `
@@ -71,5 +131,5 @@ const dismissMessages = () => {
 };
 
 export {
-  DOMappend, DOMcreate, DOMListener, displayMessage, displayProjects, displayTodoForm,
+  DOMappend, DOMcreate, DOMListener, displayMessage, displayProjects, displayTodoForm, displayTodos, toggleTodoStatus
 };

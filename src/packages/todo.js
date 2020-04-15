@@ -1,13 +1,7 @@
 import { DOMcreate } from './domManipulation';
 
 const todoProto = (priority, title, description, dueDate, status = false) => {
-  const create = (proj) => {
-    proj.todo.push({
-      priority, title, description, dueDate, status,
-    });
-  };
-
-  return { create };
+  return { priority, title, description, dueDate, status };
 };
 
 const todo = (priority, title, description, dueDate, status = false) => {

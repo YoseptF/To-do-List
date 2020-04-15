@@ -1,8 +1,9 @@
 import {
-  DOMappend, DOMcreate, DOMListener, displayMessage, displayProjects, displayTodoForm,
+  DOMappend, DOMcreate, DOMListener, displayMessage, displayProjects, displayTodoForm, displayTodos, toggleTodoStatus
 } from './domManipulation';
 import { checkData, updateData, getLocalStorage } from './localStorage';
 import { project, buttons } from './project';
+import todo  from './todo';
 
 let projects = [];
 
@@ -21,9 +22,34 @@ const createProject = (e) => {
   updateData(projects);
 };
 
-const showTodoForm = () => {
+const addTodo = (e, id) => {
+  e.preventDefault();
+  console.log("Add todo");
+  let title = document.querySelector('#title').value
+  let description = document.querySelector('#description').value
+  let dueDate = document.querySelector('#dueDate').value
+  let priority = document.querySelector('#priority').value
+  if (!title || !description || !dueDate || !priority) {
+    displayMessage("Please fill in all the fields", 'danger');
+    return false;
+  }
+  let newTodo = todo(priority, title, description, dueDate);
+  console.log("New todo: ", newTodo);
+  let obj = createTodoObj(newTodo);
+  let localS = getLocalStorage();
+  console.log("LOCALSTARAGE: ", localS);
+  localS.forEach(project => {
+    console.log("PROJECT: ", project);
+    console.log("ID: ", id);
+    if (project.id === id) {
+      console.log("yess")
+      project.todos.push(obj)
+    }
+  })
+  updateData(localS);
+  document.querySelector('#todo-form').remove();
 
-};
+}
 
 const createProjectForm = () => {
   const form = DOMcreate('form', 'project-form');
@@ -38,6 +64,8 @@ const createProjectForm = () => {
 };
 
 const createObj = (project) => ({ id: project.id, name: project.name, todos: project.todos });
+
+const createTodoObj = (todo) => ({ title: todo.title, description: todo.description, dueDate: todo.dueDate, priority: todo.priority, status: todo.status });
 
 
 const createBoard = () => {
@@ -61,12 +89,13 @@ const createBoard = () => {
 
   const right = DOMcreate('div', 'right');
   DOMappend('.content', right);
-
+  document.querySelector('.right').addEventListener('click', (e) => toggleTodoStatus(e.target));
   document.querySelector('.content').addEventListener('click', (event) => {
     console.count('click');
     displayTodoForm(event.target);
+    displayTodos(event.target);
   });
 };
 
 
-export { createBoard, createProjectForm, createProject };
+export { createBoard, createProjectForm, createProject, addTodo };
