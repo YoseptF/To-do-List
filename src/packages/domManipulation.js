@@ -1,5 +1,6 @@
 import { addTodo } from './board';
 import { getLocalStorage, updateData } from './localStorage';
+import { project } from './project';
 
 let projectId;
 
@@ -54,37 +55,36 @@ const displayTodoForm = (target) => {
 
 const toggleTodoStatus = (target) => {
   if (target.classList.contains('todo-status')) {
-    let parent = target.parentNode.parentNode;
-    let index = Array.prototype.indexOf.call(parent.children, target.parentNode);
-    let localS = getLocalStorage();
-    localS.forEach(project => {
-      if(project.id === projectId) {
+    const parent = target.parentNode.parentNode;
+    const index = Array.prototype.indexOf.call(parent.children, target.parentNode);
+    const localS = getLocalStorage();
+    localS.forEach((project) => {
+      if (project.id === projectId) {
         project.todos[index].status = !project.todos[index].status;
       }
-    })
-    target.innerText = target.innerText === 'Done'  ? 'Undo' : 'Done' 
+    });
+    target.innerText = target.innerText === 'Done' ? 'Undo' : 'Done';
     updateData(localS);
   }
-}
+};
 
 const displayTodos = (target) => {
   if (target.classList.contains('check-btn')) {
     const id = target.parentNode.previousElementSibling.innerHTML;
     projectId = id;
-    let localS = getLocalStorage();
+    const localS = getLocalStorage();
     let todos;
-    localS.forEach(project => {
-      if(project.id === id) {
+    localS.forEach((project) => {
+      if (project.id === id) {
         todos = project.todos;
       }
-    })
-    let html = map(todos);
+    });
+    const html = map(todos);
     document.querySelector('.right').innerHTML = html;
   }
-}
+};
 
-const map = (todos) => {
-  return todos.map(todo => `
+const map = (todos) => todos.map((todo) => `
     <div class="todo-details">
       <h3>${todo.title}</h3>
       <p>${todo.description}</p>
@@ -94,7 +94,6 @@ const map = (todos) => {
     </div>
   
   `).join('');
-}
 
 const displayProjects = (projects) => {
   const html = projects.map((project) => `
@@ -102,7 +101,7 @@ const displayProjects = (projects) => {
     <h2 class="project-title">${project.name}t</h2>
     <h3 class="date">${project.id}</h3>
     <div class="buttons">
-      <button class="create-btn">delete</button>
+      <button class="delete-btn">delete</button>
       <button class="add-btn">add</button>
       <button class="check-btn">check</button>
     </div>
@@ -117,6 +116,22 @@ const dismissMessages = () => {
   }, 2000);
 };
 
+const deleteProject = (target) => {
+  if (target.classList.contains('delete-btn')) {
+    const id = target.parentNode.previousElementSibling.innerHTML;
+    const thisProject = target.parentNode.parentNode;
+    const localS = getLocalStorage();
+    for (let i = 0; i < localS.length; i += 1) {
+      if (localS[i].id === id) {
+        localS.splice(i, 1);
+        break;
+      }
+    }
+    updateData(localS);
+    thisProject.remove();
+  }
+};
+
 export {
-  DOMappend, DOMcreate, DOMListener, displayMessage, displayProjects, displayTodoForm, displayTodos, toggleTodoStatus
+  DOMappend, DOMcreate, DOMListener, displayMessage, displayProjects, displayTodoForm, displayTodos, toggleTodoStatus, deleteProject,
 };

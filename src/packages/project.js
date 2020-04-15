@@ -6,7 +6,7 @@ import todo from './todo';
 
 const buttons = (proj) => {
   const buttonWrapper = DOMcreate('div', 'buttons');
-  const deleteBtn = DOMcreate('button', 'create-btn');
+  const deleteBtn = DOMcreate('button', 'delete-btn');
   const addBtn = DOMcreate('button', 'add-btn');
   const checkBtn = DOMcreate('button', 'check-btn');
 
@@ -16,8 +16,8 @@ const buttons = (proj) => {
 
   proj.append(buttonWrapper);
   buttonWrapper.append(deleteBtn);
-  buttonWrapper.append(checkBtn);
   buttonWrapper.append(addBtn);
+  buttonWrapper.append(checkBtn);
 
   DOMListener('.add-btn', 'click', displayTodoForm);
 };
