@@ -1,10 +1,23 @@
 const checkData = () => {
-  const data = localStorage.getItem('board');
-  return data ? JSON.parse(data) : false;
+  const data = JSON.parse(localStorage.getItem('board'));
+  console.log("data from locals: ");
+  console.log(data);
+  return data ? data : false;
 };
 
-const storeData = (data) => {
-  localStorage.setItem(JSON.stringify(data));
+const getLocalStorage = () => {
+  let localS;
+  if (localStorage.getItem('board') === null) {
+    localS = [];
+    localStorage.setItem('board', JSON.stringify(localS));
+  } else {
+    localS = JSON.parse(localStorage.getItem('board'));
+  }
+  return localS;
+}
+
+const updateData = (data) => {
+  localStorage.setItem('board',JSON.stringify(data));
 };
 
-export { checkData, storeData };
+export { checkData, updateData, getLocalStorage };
