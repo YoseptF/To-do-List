@@ -95,7 +95,8 @@ const displayTodos = (target) => {
     let todos;
     localS.forEach((project) => {
       if (project.id === id) {
-        todos = project.todos;
+        const { buffer } = project;
+        todos = buffer;
       }
     });
     const html = map(todos);

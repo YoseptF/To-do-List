@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment from 'moment'; /* eslint import/no-unresolved: [2, { ignore: ['\moment'] }] */
 import {
   DOMcreate, DOMappend, DOMListener, displayTodoForm,
 } from './domManipulation';
