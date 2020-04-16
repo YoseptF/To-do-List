@@ -2,7 +2,6 @@ import moment from 'moment';
 import {
   DOMcreate, DOMappend, DOMListener, displayTodoForm,
 } from './domManipulation';
-import todo from './todo';
 
 const buttons = (proj) => {
   const buttonWrapper = DOMcreate('div', 'buttons');

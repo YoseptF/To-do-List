@@ -1,33 +1,185 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,700,900&display=swap");
+
+$back: #3f3f61;
+$primary: #48435c;
+$secondary: #5a5766;
+$light: #edffec;
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+  color: $light;
 }
 
-.content{
+html,
+body {
+  background: $back;
+}
+
+.messages {
+  position: fixed;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, 0);
+  border-radius: 4px;
+  padding: 24px;
+}
+.danger {
+  background: lighten(rgba(255, 0, 0, 0.308), 10%);
+}
+
+input,
+textarea,
+select,
+option {
+  color: $primary;
+  font-size: 24px;
+  line-height: 24px;
+  padding: 12px;
+  border-radius: 4px;
+  resize: none;
+}
+
+input[type="submit"] {
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 8px 20px;
+  border-radius: 4px;
+  margin-right: 1rem;
+  cursor: pointer;
+  border: none;
+  background-color: $secondary;
+  color: $light;
+  &:hover {
+    background: $primary;
+  }
+}
+
+.content {
   max-width: 1100px;
   margin: 0 auto;
-  background: grey;
+  background: $secondary;
   min-height: 100vh;
   display: flex;
   flex-wrap: wrap;
 
   .board,
-  .right{
+  .right {
     flex-basis: 50%;
   }
 
-  .board{
+  .board {
+    overflow-y: auto;
+    max-height: 75vh;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     flex-direction: column;
+
+    .project {
+      margin-bottom: 12px;
+      padding: 24px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      .project-title {
+        text-transform: capitalize;
+        font-weight: 900;
+      }
+      .project-title,
+      .date {
+        margin-bottom: 12px;
+      }
+      .buttons {
+        flex-basis: 50%;
+        display: flex;
+        justify-content: space-around;
+        button {
+          text-transform: uppercase;
+          font-weight: 700;
+          padding: 8px 20px;
+          border-radius: 4px;
+          margin-right: 1rem;
+          cursor: pointer;
+          border: none;
+          background-color: $secondary;
+          &:hover {
+            background: $primary;
+          }
+        }
+      }
+      &:nth-child(odd) {
+        background: $primary;
+        button {
+          background: $primary;
+          &:hover {
+            background: $secondary;
+          }
+        }
+      }
+    }
   }
 
-  .project-form{
-    flex-basis: 100%;
+  .right {
+    overflow-y: auto;
+    max-height: 75vh;
     display: flex;
-    justify-content: center;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+
+    .titlesRow{
+      padding: 24px;
+      text-align: center;
+    }
+    .todo-details {
+      padding: 24px;
+      text-align: center;
+      h3{
+        text-transform: uppercase;
+      }
+      button {
+        text-transform: uppercase;
+        font-weight: 700;
+        border-radius: 4px;
+        padding: 12px;
+        cursor: pointer;
+        border: none;
+        background-color: $secondary;
+        &:hover {
+          background: $primary;
+        }
+      }
+      &:nth-child(odd){
+        background: $primary;
+        button{
+          background: $primary;
+          &:hover{
+            background: $secondary;
+          }
+        }
+      }
+    }
+    #todo-form {
+      display: flex;
+      flex-direction: column;
+      padding: 3rem;
+      width: calc(100% - 3rem);
+      input,
+      textarea {
+        margin-bottom: 18px;
+      }
+    }
+  }
+
+  .project-form {
+    flex-basis: 50%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-evenly;
     align-items: center;
   }
 }

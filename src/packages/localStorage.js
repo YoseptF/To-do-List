@@ -7,10 +7,10 @@ const getLocalStorage = () => {
     localS = JSON.parse(localStorage.getItem('board'));
   }
   return localS;
-}
+};
 
 const updateData = (data) => {
-  localStorage.setItem('board',JSON.stringify(data));
+  localStorage.setItem('board', JSON.stringify(data));
 };
 
 export { updateData, getLocalStorage };

@@ -1,11 +1,31 @@
 import {
-  DOMappend, DOMcreate, DOMListener, displayMessage, displayProjects, displayTodoForm, displayTodos, toggleTodoStatus, deleteProject,
+  DOMappend,
+  DOMcreate,
+  DOMListener,
+  displayMessage,
+  displayProjects,
+  displayTodoForm,
+  displayTodos,
+  toggleTodoStatus,
+  deleteProject,
+  deleteTodo,
 } from './domManipulation';
 import { updateData, getLocalStorage } from './localStorage';
-import { project, buttons } from './project';
+import { project } from './project';
 import todo from './todo';
 
 let projects = [];
+
+const createObj = (proj) => ({ id: proj.id, name: proj.name, todos: proj.todos });
+
+const createTodoObj = (toDo) => ({
+  title: toDo.title,
+  description: toDo.description,
+  dueDate: toDo.dueDate,
+  priority: toDo.priority,
+  status: toDo.status,
+});
+
 
 const createProject = (e) => {
   e.preventDefault();
@@ -17,8 +37,10 @@ const createProject = (e) => {
   const newProject = project(name);
   newProject.create();
   const obj = createObj(newProject);
+  projects = getLocalStorage();
   projects.push(obj);
   updateData(projects);
+  return true;
 };
 
 const addTodo = (e, id) => {
@@ -34,13 +56,14 @@ const addTodo = (e, id) => {
   const newTodo = todo(priority, title, description, dueDate);
   const obj = createTodoObj(newTodo);
   const localS = getLocalStorage();
-  localS.forEach((project) => {
-    if (project.id === id) {
-      project.todos.push(obj);
+  localS.forEach((proj) => {
+    if (proj.id === id) {
+      proj.todos.push(obj);
     }
   });
   updateData(localS);
   document.querySelector('#todo-form').remove();
+  return true;
 };
 
 const createProjectForm = () => {
@@ -48,6 +71,7 @@ const createProjectForm = () => {
   const input = DOMcreate('input', 'project-name');
   const button = DOMcreate('input', 'project-submit');
   button.value = 'Create Project';
+  input.placeholder = 'Project name';
   button.type = 'submit';
   DOMappend('.content', form);
   DOMappend('.project-form', input);
@@ -55,19 +79,12 @@ const createProjectForm = () => {
   DOMListener('.project-form', 'submit', createProject);
 };
 
-const createObj = (project) => ({ id: project.id, name: project.name, todos: project.todos });
-
-const createTodoObj = (todo) => ({
-  title: todo.title, description: todo.description, dueDate: todo.dueDate, priority: todo.priority, status: todo.status,
-});
-
 
 const createBoard = () => {
   const background = DOMcreate('div', 'board');
   DOMappend('.content', background);
 
   if (getLocalStorage().length === 0) {
-    console.log('times');
     const initialProject = project('Project test');
     initialProject.create();
     const obj = createObj(initialProject);
@@ -83,9 +100,10 @@ const createBoard = () => {
   DOMappend('.content', right);
   document.querySelector('.right').addEventListener('click', (e) => toggleTodoStatus(e.target));
   document.querySelector('.content').addEventListener('click', (event) => {
-    displayTodoForm(event.target);
+    displayTodoForm(event.target, addTodo);
     displayTodos(event.target);
     deleteProject(event.target);
+    deleteTodo(event.target);
   });
 };
 
