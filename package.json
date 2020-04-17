@@ -40,5 +40,8 @@
     "wait-on": "^4.0.2",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {
+    "moment": "^2.24.0"
   }
 }
