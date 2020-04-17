@@ -92,42 +92,83 @@ const displayTodos = (target) => {
     const id = target.parentNode.previousElementSibling.innerHTML;
     projectId = id;
     const localS = getLocalStorage();
-    let todos;
+    let todos2;
     localS.forEach((project) => {
       if (project.id === id) {
-        const { buffer } = project;
-        todos = buffer;
+        const { todos } = project;
+        todos2 = todos;
       }
     });
-    const html = map(todos);
+    let html = 'You do not have any todos. Start creating new todos!!';
+    if (todos2.length > 0) {
+      html = map(todos2);
+      const titlesRow = `
+        <tr class ="titlesRow">
+          <th>Title</th>
+          <th>Description</th>
+          <th>Priority</th>
+          <th>Due date</th>
+          <th>Status</th>
+        </tr>
+      `;
 
-    const titlesRow = `
-    <tr class ="titlesRow">
-      <th>Title</th>
-      <th>Description</th>
-      <th>Priority</th>
-      <th>Due date</th>
-      <th>Status</th>
-    </tr>
-    `;
-
-    const table = `
-    <table style="width:100%">
-    <thead>
-    ${titlesRow}
-    </thead>
-    <tbody>
-    ${html}
-    </tbody>
-    </table>
-    `;
-    document.querySelector('.right').innerHTML = table;
+      const table = `
+        <table style="width:100%">
+          <thead>
+          ${titlesRow}
+          </thead>
+          <tbody>
+          ${html}
+          </tbody>
+        </table>
+      `;
+      document.querySelector('.right').innerHTML = table;
+    } else {
+      document.querySelector('.right').innerHTML = html;
+    }
   }
+};
+
+const DOMCreateButtons = (proj) => {
+  const buttonWrapper = DOMcreate('div', 'buttons');
+  const deleteBtn = DOMcreate('button', 'delete-btn');
+  const addBtn = DOMcreate('button', 'add-btn');
+  const checkBtn = DOMcreate('button', 'check-btn');
+
+  deleteBtn.innerHTML = 'delete';
+  checkBtn.innerHTML = 'check';
+  addBtn.innerHTML = 'add';
+
+  proj.append(buttonWrapper);
+  buttonWrapper.append(deleteBtn);
+  buttonWrapper.append(addBtn);
+  buttonWrapper.append(checkBtn);
+};
+
+const DOMCreateProject = (name, initial, id) => {
+  let item;
+  if (initial) {
+    item = DOMcreate('div', 'initial-project');
+  } else {
+    item = DOMcreate('div', 'project');
+  }
+  const h2 = DOMcreate('h2', 'project-title');
+  h2.innerText = name;
+  const date = DOMcreate('h3', 'date');
+  date.innerHTML = id;
+
+  item.append(h2);
+  item.append(date);
+
+  DOMappend('.board', item);
+
+  DOMCreateButtons(item);
+  // document.querySelector('.project-form').reset();
 };
 
 const displayProjects = (projects) => {
   const html = projects.map((project) => `
-  <div class="project">
+  <div class="${project.initial ? 'initial-project' : 'project'}">
     <h2 class="project-title">${project.name}t</h2>
     <h3 class="date">${project.id}</h3>
     <div class="buttons">
@@ -145,6 +186,10 @@ const deleteProject = (target) => {
     const id = target.parentNode.previousElementSibling.innerHTML;
     const thisProject = target.parentNode.parentNode;
     const localS = getLocalStorage();
+    if (target.parentNode.parentNode.classList.contains('initial-project')) {
+      displayMessage('You can not delete the initial project', 'danger');
+      return false;
+    }
     for (let i = 0; i < localS.length; i += 1) {
       if (localS[i].id === id) {
         localS.splice(i, 1);
@@ -155,6 +200,7 @@ const deleteProject = (target) => {
     thisProject.remove();
     document.querySelector('.right').innerHTML = '';
   }
+  return true;
 };
 
 const deleteTodo = (target) => {
@@ -182,4 +228,6 @@ export {
   toggleTodoStatus,
   deleteProject,
   deleteTodo,
+  DOMCreateButtons,
+  DOMCreateProject,
 };

@@ -64,6 +64,7 @@ input[type="submit"] {
   min-height: 100vh;
   display: flex;
   flex-wrap: wrap;
+  transition: all 1.5s ease-in;
 
   .board,
   .right {
@@ -78,7 +79,8 @@ input[type="submit"] {
     align-items: center;
     flex-direction: column;
 
-    .project {
+    .project,
+    .initial-project {
       margin-bottom: 12px;
       padding: 24px;
       width: 100%;
@@ -176,6 +178,7 @@ input[type="submit"] {
   }
 
   .project-form {
+    transition: all 1.5s ease-in;
     flex-basis: 50%;
     margin: 0 auto;
     display: flex;

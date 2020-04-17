@@ -11,12 +11,14 @@ import {
   deleteTodo,
 } from './domManipulation';
 import { updateData, getLocalStorage } from './localStorage';
-import { project } from './project';
+import project from './project';
 import todo from './todo';
 
 let projects = [];
 
-const createObj = (proj) => ({ id: proj.id, name: proj.name, todos: proj.todos });
+const createObj = (proj) => ({
+  id: proj.id, initial: proj.initial, name: proj.name, todos: proj.todos,
+});
 
 const createTodoObj = (toDo) => ({
   title: toDo.title,
@@ -85,7 +87,7 @@ const createBoard = () => {
   DOMappend('.content', background);
 
   if (getLocalStorage().length === 0) {
-    const initialProject = project('Project test');
+    const initialProject = project('Project test', true);
     initialProject.create();
     const obj = createObj(initialProject);
     projects.push(obj);

@@ -1,49 +1,17 @@
 import moment from 'moment'; /* eslint import/no-unresolved: [2, { ignore: ['\moment'] }] */
 import {
-  DOMcreate, DOMappend, DOMListener, displayTodoForm,
+  DOMCreateProject,
 } from './domManipulation';
 
-const buttons = (proj) => {
-  const buttonWrapper = DOMcreate('div', 'buttons');
-  const deleteBtn = DOMcreate('button', 'delete-btn');
-  const addBtn = DOMcreate('button', 'add-btn');
-  const checkBtn = DOMcreate('button', 'check-btn');
-
-  deleteBtn.innerHTML = 'delete';
-  checkBtn.innerHTML = 'check';
-  addBtn.innerHTML = 'add';
-
-  proj.append(buttonWrapper);
-  buttonWrapper.append(deleteBtn);
-  buttonWrapper.append(addBtn);
-  buttonWrapper.append(checkBtn);
-
-  DOMListener('.add-btn', 'click', displayTodoForm);
-};
-
-
-const projectProto = (name) => {
+const projectProto = (name, initial = null) => {
   const id = moment().format('MM Do YY, h:mm:ss a');
-  const create = () => {
-    const item = DOMcreate('div', 'project');
-    const h2 = DOMcreate('h2', 'project-title');
-    h2.innerText = name;
-    const date = DOMcreate('h3', 'date');
-    date.innerHTML = id;
-
-    item.append(h2);
-    item.append(date);
-
-    DOMappend('.board', item);
-
-    buttons(item);
-  };
+  const create = () => DOMCreateProject(name, initial, id);
   const todos = [];
   return {
-    create, name, todos, id,
+    create, name, todos, id, initial,
   };
 };
 
-const project = (name) => Object.create(projectProto(name));
+const project = (name, initial) => Object.create(projectProto(name, initial));
 
-export { project, buttons };
+export default project;
